@@ -1,5 +1,6 @@
 import React from "react";
 import { Route, Routes } from "react-router-dom";
+import AddArticle from "./components/AddArticle";
 import ArticleDetail from "./components/ArticleDetail";
 import ArticleList from "./components/ArticleList";
 
@@ -11,6 +12,7 @@ function App() {
         <Routes>
           <Route path="/" exact element={<ArticleList />} />
           <Route path="posts/:id" element={<ArticleDetail />} />
+          <Route path="addArticle" element={<AddArticle />} />
         </Routes>
       </div>
     </div>
