@@ -1,6 +1,6 @@
-import axios from "axios";
 import React, { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import api from "../api";
 
 export default function ArticleForm() {
   const navigate = useNavigate();
@@ -15,9 +15,9 @@ export default function ArticleForm() {
   const onFormSubmit = (event) => {
     event.preventDefault();
     setErrorMsg("");
-    axios
-      .post("https://react-yazi-yorum-ffi3.onrender.com/posts", article)
-      .then((response) => {
+    api()
+      .post("/posts", article)
+      .then((_response) => {
         navigate("/");
       })
       .catch((error) => {

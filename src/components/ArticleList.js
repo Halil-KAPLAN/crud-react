@@ -1,13 +1,13 @@
-import axios from "axios";
 import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import api from "../api";
 
 export default function ArticleList(props) {
   const [articleList, setArticleList] = useState([]);
 
   useEffect(() => {
-    axios
-      .get("https://react-yazi-yorum-ffi3.onrender.com/posts")
+    api()
+      .get("/posts")
       .then((response) => {
         setArticleList(response.data);
       });
