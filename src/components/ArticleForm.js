@@ -1,28 +1,48 @@
-import React, { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 import api from "../api";
 
-export default function ArticleForm() {
+export default function ArticleForm({ articleData }) {
   const navigate = useNavigate();
   const [article, setArticle] = useState({ title: "", content: "" });
   const [errorMsg, setErrorMsg] = useState("");
+  const { id } = useParams();
+
+  useEffect(() => {
+    if (articleData && Object.keys(articleData).length > 0) {
+      setArticle(articleData);
+    }
+  }, [articleData]);
 
   const onInputChange = (event) =>
     setArticle({
       ...article,
       [event.target.name]: event.target.value,
     });
+
   const onFormSubmit = (event) => {
     event.preventDefault();
     setErrorMsg("");
-    api()
-      .post("/posts", article)
-      .then((_response) => {
-        navigate("/");
-      })
-      .catch((error) => {
-        setErrorMsg(error.response.data.errorMessage);
-      });
+
+    if (id) {
+      api()
+        .put(`/posts/${id}`, article)
+        .then((_response) => {
+          navigate(`/posts/${id}`);
+        })
+        .catch((error) => {
+          setErrorMsg(error.response.data.errorMessage);
+        });
+    } else {
+      api()
+        .post("/posts", article)
+        .then((_response) => {
+          navigate("/");
+        })
+        .catch((error) => {
+          setErrorMsg(error.response.data.errorMessage);
+        });
+    }
   };
 
   return (

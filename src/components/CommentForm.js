@@ -1,12 +1,17 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 
-const COMMENT_STARTER = {
-  display_name: "",
-  body: "",
-};
-
-export default function CommentForm({ handleSubmit }) {
+export default function CommentForm({ handleSubmit, commentData }) {
+  const COMMENT_STARTER = {
+    display_name: "",
+    body: "",
+  };
   const [comment, setComment] = useState(COMMENT_STARTER);
+
+  useEffect(() => {
+    if (commentData && Object.keys(commentData).length > 0) {
+      setComment(commentData);
+    }
+  }, [commentData]);
 
   const handleOnChange = (event) => {
     setComment({ ...comment, [event.target.name]: event.target.value });
@@ -14,7 +19,7 @@ export default function CommentForm({ handleSubmit }) {
 
   return (
     <React.Fragment>
-      <h3>Add Comment</h3>
+      {!commentData && <h3>Add Comment</h3>}
       <form
         className="ui form"
         onSubmit={(event) => {
@@ -27,6 +32,7 @@ export default function CommentForm({ handleSubmit }) {
             type="text"
             name="display_name"
             placeholder="Your Name"
+            disabled={commentData && true}
             value={comment.display_name}
             onChange={(e) => handleOnChange(e)}
           />
@@ -39,7 +45,7 @@ export default function CommentForm({ handleSubmit }) {
           onChange={(e) => handleOnChange(e)}
         ></textarea>
         <button className="ui primary button" type="submit">
-          Save
+          {commentData ? "Edit" : "Save"}
         </button>
       </form>
     </React.Fragment>

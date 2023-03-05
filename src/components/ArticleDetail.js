@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import api from "../api";
 import ArticleComments from "./ArticleComments";
 
@@ -10,17 +10,15 @@ export default function ArticleDetail(props) {
 
   const handleCommentSubmit = (event, comment) => {
     event.preventDefault();
-    api().post(`/posts/${id}/comments`, comment).then((response) => {
-      setArticleComments([...articleComments, response.data]);
-    });
+    api()
+      .post(`/posts/${id}/comments`, comment)
+      .then((response) => {
+        setArticleComments([...articleComments, response.data]);
+      });
   };
 
   useEffect(() => {
-    Promise
-      .all([
-        api().get(`/posts/${id}`),
-        api().get(`/posts/${id}/comments`),
-      ])
+    Promise.all([api().get(`/posts/${id}`), api().get(`/posts/${id}/comments`)])
       .then((response) => {
         setArticleDetail(response[0].data);
         setArticleComments(response[1].data);
@@ -35,6 +33,10 @@ export default function ArticleDetail(props) {
       <h2 className="ui header">{articleDetail.title}</h2>
       <p>{articleDetail.created_at}</p>
       <p>{articleDetail.content}</p>
+      <div className="ui buttons">
+        <Link className="ui blue button" to={`/posts/${id}/edit`}>Edit</Link>
+        <button className="ui red button">Delete</button>
+      </div>
       <ArticleComments
         articleComments={articleComments}
         handleSubmit={handleCommentSubmit}
