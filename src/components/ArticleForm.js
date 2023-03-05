@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { Link, useNavigate, useParams } from "react-router-dom";
 import api from "../api";
 
 export default function ArticleForm({ articleData }) {
@@ -73,7 +73,7 @@ export default function ArticleForm({ articleData }) {
       <button className="ui primary button" onClick={onFormSubmit}>
         Save
       </button>
-      <button className="ui button">Discard</button>
+      <Link to="/" className="ui button">Discard</Link>
     </div>
   );
 }

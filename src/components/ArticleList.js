@@ -15,6 +15,9 @@ export default function ArticleList(props) {
 
   return (
     <div className="ui relaxed divided list">
+      <Link to="/addArticle" className="ui primary button">
+        Add Article
+      </Link>
       {articleList.map(({ id, title, created_at }) => {
         return (
           <div className="item" key={id}>
