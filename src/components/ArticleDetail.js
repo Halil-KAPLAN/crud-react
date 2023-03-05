@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import api from "../api";
 import ArticleComments from "./ArticleComments";
+import DeleteModal from "./DeleteModal";
 
 export default function ArticleDetail(props) {
   const { id } = useParams();
@@ -34,8 +35,13 @@ export default function ArticleDetail(props) {
       <p>{articleDetail.created_at}</p>
       <p>{articleDetail.content}</p>
       <div className="ui buttons">
-        <Link className="ui blue button" to={`/posts/${id}/edit`}>Edit</Link>
-        <button className="ui red button">Delete</button>
+        <Link className="ui blue button" to={`/posts/${id}/edit`}>
+          Edit
+        </Link>
+        <DeleteModal
+          id={articleDetail.id}
+          componentType="article"
+        ></DeleteModal>
       </div>
       <ArticleComments
         articleComments={articleComments}
