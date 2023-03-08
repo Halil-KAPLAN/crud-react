@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link } from "react-router-dom";
-import api from "../api";
+import { getArticleList } from "../actions";
 
-export default function ArticleList(props) {
-  const [articleList, setArticleList] = useState([]);
+export default function ArticleList() {
+  const articleList = useSelector((state) => state.articleList);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    api()
-      .get("/posts")
-      .then((response) => {
-        setArticleList(response.data);
-      });
-  }, []);
+    dispatch(getArticleList());
+  }, [dispatch]);
 
   return (
     <div className="ui relaxed divided list">

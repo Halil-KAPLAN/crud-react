@@ -15,6 +15,9 @@ export default function ArticleDetail(props) {
       .post(`/posts/${id}/comments`, comment)
       .then((response) => {
         setArticleComments([...articleComments, response.data]);
+      })
+      .catch((error) => {
+        console.log(error);
       });
   };
 
