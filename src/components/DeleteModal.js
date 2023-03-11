@@ -1,32 +1,34 @@
 import React, { useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { useNavigate } from "react-router-dom";
 import { Button, Modal } from "semantic-ui-react";
-import api from "../api";
+import { deleteArticle, deleteArticleComment } from "../actions";
 
 export default function DeleteModal({ deleteObject, componentType }) {
-  const [open, setOpen] = useState(false);
-  const [error, setError] = useState("");
-
+  const dispatch = useDispatch();
   const show = () => setOpen(true);
   const close = () => setOpen(false);
+
   const navigate = useNavigate();
 
-  const handleDelete = (deleteObj) => {
-    const deleteURL =
-      componentType === "article"
-        ? `/posts/${deleteObj.id}`
-        : `/posts/${deleteObj.post_id}/comments/${deleteObj.id}`;
+  const [open, setOpen] = useState(false);
+  const error = useSelector((state) => state.articleDeleteError);
 
-    api()
-      .delete(deleteURL)
-      .then(() => {
-        setError("");
-        close();
-        navigate("/");
-      })
-      .catch((err) => {
-        setError(err.response.data.errorMessage);
-      });
+  const handleDelete = ({ id, post_id }) => {
+    if (componentType === "article") {
+      dispatch(
+        deleteArticle(id, () => {
+          close();
+          navigate("/");
+        })
+      );
+    } else {
+      dispatch(
+        deleteArticleComment(id, post_id, () => {
+          close();
+        })
+      );
+    }
   };
 
   return (

@@ -1,55 +1,46 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useParams } from "react-router-dom";
-import api from "../api";
+import { addArticleDetail, getArticleDetail } from "../actions";
 import ArticleComments from "./ArticleComments";
 import DeleteModal from "./DeleteModal";
 
-export default function ArticleDetail(props) {
+export default function ArticleDetail() {
   const { id } = useParams();
-  const [articleDetail, setArticleDetail] = useState({});
-  const [articleComments, setArticleComments] = useState([]);
+  const dispatch = useDispatch();
+  const articleDetail = useSelector((state) => state.articleDetail);
+
+  useEffect(() => {
+    dispatch(getArticleDetail(id));
+  }, [id, dispatch]);
 
   const handleCommentSubmit = (event, comment) => {
     event.preventDefault();
-    api()
-      .post(`/posts/${id}/comments`, comment)
-      .then((response) => {
-        setArticleComments([...articleComments, response.data]);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
+    dispatch(addArticleDetail(id, comment));
   };
-
-  useEffect(() => {
-    Promise.all([api().get(`/posts/${id}`), api().get(`/posts/${id}/comments`)])
-      .then((response) => {
-        setArticleDetail(response[0].data);
-        setArticleComments(response[1].data);
-      })
-      .catch((error) => {
-        console.log(error);
-      });
-  }, [id]);
 
   return (
     <React.Fragment>
-      <h2 className="ui header">{articleDetail.title}</h2>
-      <p>{articleDetail.created_at}</p>
-      <p>{articleDetail.content}</p>
-      <div className="ui buttons">
-        <Link className="ui blue button" to={`/posts/${id}/edit`}>
-          Edit
-        </Link>
-        <DeleteModal
-          id={articleDetail.id}
-          componentType="article"
-        ></DeleteModal>
-      </div>
-      <ArticleComments
-        articleComments={articleComments}
-        handleSubmit={handleCommentSubmit}
-      />
+      {articleDetail && (
+        <React.Fragment>
+          <h2 className="ui header">{articleDetail.title}</h2>
+          <p>{articleDetail.created_at}</p>
+          <p>{articleDetail.content}</p>
+          <div className="ui buttons">
+            <Link className="ui blue button" to={`/posts/${id}/edit`}>
+              Edit
+            </Link>
+            <DeleteModal
+              deleteObject={articleDetail}
+              componentType="article"
+            ></DeleteModal>
+          </div>
+          <ArticleComments
+            articleComments={articleDetail.articleComments}
+            handleSubmit={handleCommentSubmit}
+          />
+        </React.Fragment>
+      )}
     </React.Fragment>
   );
 }

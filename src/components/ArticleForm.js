@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { Link, useNavigate, useParams } from "react-router-dom";
-import api from "../api";
+import { addArticle, updateArticle } from "../actions";
 
 export default function ArticleForm({ articleData }) {
   const navigate = useNavigate();
   const [article, setArticle] = useState({ title: "", content: "" });
-  const [errorMsg, setErrorMsg] = useState("");
+  const errorMsg = useSelector((state) => state.articleAddUpdateError);
   const { id } = useParams();
+  const dispatch = useDispatch();
 
   useEffect(() => {
     if (articleData && Object.keys(articleData).length > 0) {
@@ -22,26 +24,19 @@ export default function ArticleForm({ articleData }) {
 
   const onFormSubmit = (event) => {
     event.preventDefault();
-    setErrorMsg("");
 
     if (id) {
-      api()
-        .put(`/posts/${id}`, article)
-        .then((_response) => {
+      dispatch(
+        updateArticle(id, article, () => {
           navigate(`/posts/${id}`);
         })
-        .catch((error) => {
-          setErrorMsg(error.response.data.errorMessage);
-        });
+      );
     } else {
-      api()
-        .post("/posts", article)
-        .then((_response) => {
+      dispatch(
+        addArticle(article, () => {
           navigate("/");
         })
-        .catch((error) => {
-          setErrorMsg(error.response.data.errorMessage);
-        });
+      );
     }
   };
 
@@ -73,7 +68,9 @@ export default function ArticleForm({ articleData }) {
       <button className="ui primary button" onClick={onFormSubmit}>
         Save
       </button>
-      <Link to="/" className="ui button">Discard</Link>
+      <Link to="/" className="ui button">
+        Discard
+      </Link>
     </div>
   );
 }
