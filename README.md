@@ -1,8 +1,9 @@
-# CRUD OPERATION EXAMPLE WITH REDUX
+# CRUD Operation Example with Redux
 
 It is an example of crud made using React and Redux. Lists data in API and applies crud operations
 
 This example is published on the following site. You can check.
+
 https://crud-example-react.netlify.app/
 
 ![alt text](public/image/image1.jpg?raw=true)
